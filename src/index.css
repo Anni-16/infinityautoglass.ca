@@ -238,6 +238,8 @@ body { font-family: var(--font); color: var(--text); background: var(--white); o
 /* Hide hero's duplicate logo text on small/medium screens (only in hero) */
 @media (min-width: 320px) and (max-width: 1024px) {
   .hero-spidey .spidey-logo .logo-text { display: none; }
+  /* Also hide the hero logo mark (icon) in the same range; navbar logo-mark remains visible */
+  .hero-spidey .spidey-logo .logo-mark { display: none; }
 }
 .btn-spidey-ghost {
   display: inline-flex; align-items: center; gap: 0.4rem;
