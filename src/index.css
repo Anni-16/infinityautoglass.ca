@@ -235,6 +235,10 @@ body { font-family: var(--font); color: var(--text); background: var(--white); o
   .hero-badges { justify-content: center; }
   .hero-quote-card { width: 100%; max-width: 500px; margin: 0 auto; }
 }
+/* Hide hero's duplicate logo text on small/medium screens (only in hero) */
+@media (min-width: 320px) and (max-width: 1024px) {
+  .hero-spidey .spidey-logo .logo-text { display: none; }
+}
 .btn-spidey-ghost {
   display: inline-flex; align-items: center; gap: 0.4rem;
   padding: 0.9rem 1.8rem; background: transparent; color: #111;
@@ -529,8 +533,9 @@ body { font-family: var(--font); color: var(--text); background: var(--white); o
 .success-box p { color: var(--muted); font-size: 0.92rem; line-height: 1.6; }
 
 /* RESPONSIVE */
+/* Scoped: hide only hero logo-text between 320px and 1024px (navbar/footer remain visible) */
 @media (min-width: 320px) and (max-width: 1024px) {
-  .logo-text { display: none; }
+  .hero-spidey .spidey-logo .logo-text { display: none; }
 }
 @media (max-width: 1024px) {
   .services-grid { grid-template-columns: repeat(2, 1fr); }
