@@ -368,11 +368,13 @@ body { font-family: var(--font); color: var(--text); background: var(--white); o
   text-transform: uppercase;
 }
 .serve-title {
-  font-family: var(--font-head);
-  font-size: 3.2rem;
-  color: #fff;
-  text-transform: uppercase;
+  font-family: var(--font);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #fff !important;
   margin-bottom: 0.8rem;
+  text-transform: none;
+  letter-spacing: 0;
 }
 .serve-grid {
   display: grid;
@@ -443,7 +445,7 @@ body { font-family: var(--font); color: var(--text); background: var(--white); o
 .why-section { padding: 5rem 0; background: #111111; }
 .why-section .section-head h2 { color: #fff; }
 .why-section .section-head p { color: #9CA3AF; }
-.why-section .section-eyebrow { background: transparent; color: #F97316; }
+.why-section .section-eyebrow { background: transparent; color: #fff !important; }
 .why-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
