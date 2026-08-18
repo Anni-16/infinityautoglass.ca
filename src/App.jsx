@@ -52,7 +52,7 @@ export default function App() {
               </a>
             </div>
             <div className="spidey-headline">
-              <p className="hero-eyebrow-tag"><i className="fa-solid fa-car"></i> Mobile Auto Glass — Halifax & Dartmouth</p>
+              <p className="hero-eyebrow-tag"><i className="fa-solid fa-car"></i> Mobile Auto Glass — HRM Region & Surrounding Areas</p>
               <h1>
                 <span className="spidey-word-lg">We Come</span><span className="spidey-word-sm"> to You.</span>
                 <br />
@@ -212,6 +212,33 @@ export default function App() {
         </div>
       </section>
 
+      {/* WHY CHOOSE US */}
+      <section className="why-section">
+        <div className="container">
+          <div className="section-head">
+            <p className="section-eyebrow">Why Choose Us</p>
+            <h2>The Infinity Auto Glass Difference</h2>
+            <p>We're not just another auto glass shop. Here's why HRM region & surrounding area drivers trust us.</p>
+          </div>
+          <div className="why-grid">
+            {[
+              { icon: 'fa-solid fa-bolt', title: 'Same-Day Service', desc: 'We offer same-day appointments so you\'re never left waiting. Your time matters — we show up fast and get the job done right.' },
+              { icon: 'fa-solid fa-location-dot', title: 'We Come to You', desc: 'No need to visit a shop. Our mobile technicians come to your home, office, or wherever is most convenient for you.' },
+              { icon: 'fa-solid fa-shield-halved', title: 'Insurance Assistance', desc: 'We help you navigate the insurance process from start to finish, making your claim as smooth and stress-free as possible.' },
+              { icon: 'fa-solid fa-award', title: 'OEM-Quality Glass', desc: 'We use only OEM-quality glass that meets or exceeds manufacturer standards for a perfect fit and lasting durability.' },
+              { icon: 'fa-solid fa-user-check', title: 'Certified Technicians', desc: 'Our experienced, certified technicians bring precision and professionalism to every job — big or small.' },
+              { icon: 'fa-solid fa-tag', title: 'Competitive Pricing', desc: 'Transparent, upfront pricing with no hidden fees. You get premium service at a fair and honest price, every time.' },
+            ].map(({ icon, title, desc }) => (
+              <div key={title} className="why-card">
+                <div className="why-icon-wrap"><i className={icon}></i></div>
+                <h3 className="why-title">{title}</h3>
+                <p className="why-desc">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* TESTIMONIALS */}
       <section id="reviews" className="reviews-section">
         <div className="container">
@@ -247,7 +274,7 @@ export default function App() {
         <div className="container cta-inner">
           <div>
             <h2>Ready to Book Your Auto Glass Service?</h2>
-            <p>Call us or get a free quote online. Same-day appointments available in Halifax & Dartmouth.</p>
+            <p>Call us or get a free quote online. Same-day appointments available in HRM region & surrounding areas.</p>
           </div>
           <div className="cta-actions">
             <button className="btn-white" onClick={() => setIsModalOpen(true)}>Get Free Quote</button>
