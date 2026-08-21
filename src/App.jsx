@@ -3,10 +3,24 @@ import React, { useState } from 'react';
 import './index.css';
 import { Zap, Target, Globe, Sparkles, Award, Phone, Mail, MapPin, CheckCircle, Star, Send, X, ChevronRight, BarChart3, TrendingUp, Users, Rocket } from 'lucide-react';
 
+async function submitToMailer(data) {
+  const res = await fetch('http://localhost:3001/api/quote', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  const json = await res.json();
+  return json.ok;
+}
+
 export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [form, setForm] = useState({ name: '', brand: '', phone: '', goal: 'Scale Revenue 3X' });
+  const [form, setForm] = useState({ name: '', brand: '', phone: '', email: '', vin: '', damage: '' });
+  const [heroForm, setHeroForm] = useState({ name: '', brand: '', phone: '', email: '', vin: '', damage: '' });
+  const [heroSubmitted, setHeroSubmitted] = useState(false);
+  const [heroLoading, setHeroLoading] = useState(false);
+  const [modalLoading, setModalLoading] = useState(false);
 
   return (
     <div className="site">
@@ -16,7 +30,7 @@ export default function App() {
         <div className="container topbar-inner">
           <div className="topbar-left">
             <span><Phone size={13} /> xxx-xxx-xxx-xxxx</span>
-            <span><Mail size={13} /> hello@krytons.com</span>
+            <span><Mail size={30} /> hello@krytons.com</span>
           </div>
 
         </div>
@@ -74,36 +88,44 @@ export default function App() {
           <div id="quote-form" className="hero-quote-card">
             <h3 className="quote-card-title">Get Your Free Quote</h3>
             <p className="quote-card-sub">We'll call you back within the hour with a price.</p>
-            <form onSubmit={e => { e.preventDefault(); setIsSubmitted(true); }} className="quote-form">
+            {heroSubmitted ? (
+              <div className="success-box" style={{padding:'2rem 0'}}>
+                <div className="success-icon"><CheckCircle size={36} /></div>
+                <h3 style={{fontFamily:'var(--font)',fontWeight:800,fontSize:'1.4rem',color:'#111',marginBottom:'0.5rem'}}>Quote Requested!</h3>
+                <p style={{color:'#6B7280',fontSize:'0.9rem'}}>Thank you <strong>{heroForm.name}</strong>! We'll call you within the hour.</p>
+              </div>
+            ) : (
+            <form onSubmit={async e => { e.preventDefault(); setHeroLoading(true); const ok = await submitToMailer(heroForm); setHeroLoading(false); if(ok) setHeroSubmitted(true); }} className="quote-form">
               <div className="qf-group">
                 <label>Full Name <span className="qf-req">*</span></label>
-                <input type="text" required placeholder="Your full name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
+                <input type="text" required placeholder="Your full name" value={heroForm.name} onChange={e => setHeroForm({ ...heroForm, name: e.target.value })} />
               </div>
               <div className="qf-group">
                 <label>Phone Number <span className="qf-req">*</span></label>
-                <input type="tel" required placeholder="e.g. xxx-xxx-xxx-xxxx" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
+                <input type="tel" required placeholder="e.g. xxx-xxx-xxx-xxxx" value={heroForm.phone} onChange={e => setHeroForm({ ...heroForm, phone: e.target.value })} />
               </div>
               <div className="qf-group">
-                <label>Email Address</label>
-                <input type="email" placeholder="your@email.com" />
+                <label>Email Address <span className="qf-req">*</span></label>
+                <input type="email" required placeholder="your@email.com" value={heroForm.email} onChange={e => setHeroForm({ ...heroForm, email: e.target.value })} />
               </div>
               <div className="qf-group">
                 <label>Vehicle Year, Make &amp; Model <span className="qf-req">*</span></label>
-                <input type="text" required placeholder="e.g. 2020 Honda Civic" value={form.brand} onChange={e => setForm({ ...form, brand: e.target.value })} />
+                <input type="text" required placeholder="e.g. 2020 Honda Civic" value={heroForm.brand} onChange={e => setHeroForm({ ...heroForm, brand: e.target.value })} />
               </div>
               <div className="qf-group">
-                <label>VIN <span className="qf-optional">(optional — speeds up parts lookup)</span></label>
-                <input type="text" placeholder="e.g. 1HGBH41JXMN109186" />
+                <label>VIN <span className="qf-optional">(optional)</span></label>
+                <input type="text" placeholder="e.g. 1HGBH41JXMN109186" value={heroForm.vin} onChange={e => setHeroForm({ ...heroForm, vin: e.target.value })} />
               </div>
               <div className="qf-group">
                 <label>Describe the Damage <span className="qf-optional">(optional)</span></label>
-                <textarea rows={2} placeholder="e.g. Stone chip on driver side, crack 6 inches long..."></textarea>
+                <textarea rows={2} placeholder="e.g. Stone chip on driver side..." value={heroForm.damage} onChange={e => setHeroForm({ ...heroForm, damage: e.target.value })}></textarea>
               </div>
-              <button type="submit" className="qf-submit">Get My Free Quote →</button>
+              <button type="submit" className="qf-submit" disabled={heroLoading}>{heroLoading ? 'Sending...' : 'Get My Free Quote →'}</button>
               <p className="qf-note"><i className="fa-solid fa-lock"></i> No obligation · We call you within the hour</p>
               <div className="qf-divider"><span>— or —</span></div>
               <a href="tel:+19023995445" className="qf-call"><Phone size={15} /> Call xxx-xxx-xxx-xxxx</a>
             </form>
+            )}
           </div>
         </div>
       </section>
@@ -325,7 +347,7 @@ export default function App() {
                 <p className="modal-eyebrow"><i className="fa-solid fa-car"></i> Free Auto Glass Quote</p>
                 <h3 className="modal-title">Get Your Free Quote</h3>
                 <p className="modal-sub">Fill in your details and we'll call you back within the hour with a price.</p>
-                <form onSubmit={e => { e.preventDefault(); setIsSubmitted(true); }}>
+                <form onSubmit={async e => { e.preventDefault(); setModalLoading(true); const ok = await submitToMailer(form); setModalLoading(false); if(ok) setIsSubmitted(true); }}>
                   <div className="form-group">
                     <label className="form-label">Full Name *</label>
                     <input type="text" required className="form-input" placeholder="Your full name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
@@ -336,8 +358,8 @@ export default function App() {
                       <input type="tel" required className="form-input" placeholder="e.g. xxx-xxx-xxx-xxxx" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
                     </div>
                     <div>
-                      <label className="form-label">Email</label>
-                      <input type="email" className="form-input" placeholder="your@email.com" />
+                      <label className="form-label">Email *</label>
+                      <input type="email" required className="form-input" placeholder="your@email.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
                     </div>
                   </div>
                   <div className="form-group">
@@ -346,14 +368,14 @@ export default function App() {
                   </div>
                   <div className="form-group">
                     <label className="form-label">VIN <span style={{fontWeight:400,textTransform:'none',color:'#9CA3AF'}}>(optional)</span></label>
-                    <input type="text" className="form-input" placeholder="e.g. 1HGBH41JXMN109186" />
+                    <input type="text" className="form-input" placeholder="e.g. 1HGBH41JXMN109186" value={form.vin} onChange={e => setForm({ ...form, vin: e.target.value })} />
                   </div>
                   <div className="form-group">
                     <label className="form-label">Describe the Damage <span style={{fontWeight:400,textTransform:'none',color:'#9CA3AF'}}>(optional)</span></label>
-                    <textarea className="form-input" rows={2} placeholder="e.g. Stone chip on driver side, crack 6 inches long..." style={{resize:'vertical'}} />
+                    <textarea className="form-input" rows={2} placeholder="e.g. Stone chip on driver side, crack 6 inches long..." style={{resize:'vertical'}} value={form.damage} onChange={e => setForm({ ...form, damage: e.target.value })} />
                   </div>
-                  <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '0.5rem' }}>
-                    Get My Free Quote →
+                  <button type="submit" className="btn-primary" disabled={modalLoading} style={{ width: '100%', justifyContent: 'center', marginTop: '0.5rem' }}>
+                    {modalLoading ? 'Sending...' : 'Get My Free Quote →'}
                   </button>
                 </form>
               </>
