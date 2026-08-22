@@ -1,5 +1,4 @@
 const express = require('express');
-const nodemailer = require('nodemailer');
 const cors = require('cors');
 require('dotenv').config();
 
@@ -7,25 +6,20 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
-  },
-});
-
 app.post('/api/quote', async (req, res) => {
   const { name, email, phone, brand, vin, damage } = req.body;
 
   try {
-    // Email to admin
-    await transporter.sendMail({
-      from: `"Infinity Auto Glass" <${process.env.MAIL_USER}>`,
+    const { Resend } = await import('resend');
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    // Admin notification
+    await resend.emails.send({
+      from: 'onboarding@resend.dev',
       to: process.env.MAIL_TO,
       subject: `New Quote Request — ${brand || 'Vehicle'}`,
       html: `
-        <h2>New Quote Request</h2>
+        <h2 style="color:#0a1628">New Quote Request</h2>
         <p><b>Name:</b> ${name}</p>
         <p><b>Email:</b> ${email}</p>
         <p><b>Phone:</b> ${phone}</p>
@@ -35,13 +29,14 @@ app.post('/api/quote', async (req, res) => {
       `,
     });
 
-    // Confirmation email to customer
-    await transporter.sendMail({
-      from: `"Infinity Auto Glass" <${process.env.MAIL_USER}>`,
-      to: email,
-      subject: 'We received your quote request!',
+    // Customer thank you — sent to admin since free plan restricts recipient
+    await resend.emails.send({
+      from: 'onboarding@resend.dev',
+      to: process.env.MAIL_TO,
+      subject: `[CUSTOMER COPY] Thank You — ${name}`,
       html: `
-        <h2>Hi ${name},</h2>
+        <p style="color:#888;font-size:12px">Forward this to: ${email}</p>
+        <h2 style="color:#0a1628">Hi ${name},</h2>
         <p>Thanks for reaching out to <b>Infinity Auto Glass</b>!</p>
         <p>We've received your quote request for your <b>${brand}</b> and will call you back within the hour.</p>
         <p>— The Infinity Auto Glass Team</p>
@@ -55,4 +50,4 @@ app.post('/api/quote', async (req, res) => {
   }
 });
 
-app.listen(3001, () => console.log('Mailer server running on http://localhost:3001'));
+app.listen(3001, () => console.log('Server running on http://localhost:3001'));

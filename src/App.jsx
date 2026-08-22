@@ -4,13 +4,18 @@ import './index.css';
 import { Zap, Target, Globe, Sparkles, Award, Phone, Mail, MapPin, CheckCircle, Star, Send, X, ChevronRight, BarChart3, TrendingUp, Users, Rocket } from 'lucide-react';
 
 async function submitToMailer(data) {
-  const res = await fetch('http://localhost:3001/api/quote', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-  const json = await res.json();
-  return json.ok;
+  try {
+    const res = await fetch('/api/quote', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    const json = await res.json();
+    return json.ok;
+  } catch (err) {
+    console.error('Mailer error:', err);
+    return false;
+  }
 }
 
 export default function App() {
@@ -29,19 +34,18 @@ export default function App() {
       <div className="topbar">
         <div className="container topbar-inner">
           <div className="topbar-left">
-            <span><Phone size={13} /> xxx-xxx-xxx-xxxx</span>
-            <span><Mail size={30} /> hello@krytons.com</span>
+            <span><Phone size={13} /> (902) 233-8587</span>
+            <span><Mail size={30} /> infinityautoglass1@gmail.com</span>
           </div>
 
         </div>
       </div>
 
-      {/* NAVBAR */}
+      {/* NAVBAR */}  
       <nav className="navbar">
         <div className="container nav-inner">
           <a href="#" className="logo">
-            <div className="logo-mark"><Zap size={20} /></div>
-            <span className="logo-text">Infinity Auto Glass</span>
+            <img src="/logo.png" alt="Infinity Auto Glass" className="logo-img" />
           </a>
           <ul className="nav-links">
             <li><a href="#services">Services</a></li>
@@ -61,8 +65,7 @@ export default function App() {
           <div className="spidey-left">
             <div className="spidey-logo">
               <a href="#" className="logo">
-                <div className="logo-mark"><Zap size={20} /></div>
-                <span className="logo-text" style={{ color: '#111' }}>Infinity Auto Glass</span>
+                <img src="/logo.png" alt="Infinity Auto Glass" className="logo-img" />
               </a>
             </div>
             <div className="spidey-headline">
@@ -95,14 +98,14 @@ export default function App() {
                 <p style={{color:'#6B7280',fontSize:'0.9rem'}}>Thank you <strong>{heroForm.name}</strong>! We'll call you within the hour.</p>
               </div>
             ) : (
-            <form onSubmit={async e => { e.preventDefault(); setHeroLoading(true); const ok = await submitToMailer(heroForm); setHeroLoading(false); if(ok) setHeroSubmitted(true); }} className="quote-form">
+            <form onSubmit={async e => { e.preventDefault(); setHeroLoading(true); const ok = await submitToMailer(heroForm); setHeroLoading(false); if(ok) setHeroSubmitted(true); else alert('Something went wrong. Please try again or call us directly.'); }} className="quote-form">
               <div className="qf-group">
                 <label>Full Name <span className="qf-req">*</span></label>
                 <input type="text" required placeholder="Your full name" value={heroForm.name} onChange={e => setHeroForm({ ...heroForm, name: e.target.value })} />
               </div>
               <div className="qf-group">
                 <label>Phone Number <span className="qf-req">*</span></label>
-                <input type="tel" required placeholder="e.g. xxx-xxx-xxx-xxxx" value={heroForm.phone} onChange={e => setHeroForm({ ...heroForm, phone: e.target.value })} />
+                <input type="tel" required placeholder="e.g. (902) 233-8587" value={heroForm.phone} onChange={e => setHeroForm({ ...heroForm, phone: e.target.value })} />
               </div>
               <div className="qf-group">
                 <label>Email Address <span className="qf-req">*</span></label>
@@ -123,7 +126,7 @@ export default function App() {
               <button type="submit" className="qf-submit" disabled={heroLoading}>{heroLoading ? 'Sending...' : 'Get My Free Quote →'}</button>
               <p className="qf-note"><i className="fa-solid fa-lock"></i> No obligation · We call you within the hour</p>
               <div className="qf-divider"><span>— or —</span></div>
-              <a href="tel:+19023995445" className="qf-call"><Phone size={15} /> Call xxx-xxx-xxx-xxxx</a>
+              <a href="tel:+19023995445" className="qf-call"><Phone size={15} /> Call (902) 233-8587</a>
             </form>
             )}
           </div>
@@ -300,7 +303,7 @@ export default function App() {
           </div>
           <div className="cta-actions">
             <button className="btn-white" onClick={() => setIsModalOpen(true)}>Get Free Quote</button>
-            <a href="tel:+19022338587" className="btn-ghost-white"><Phone size={16} /> Call xxx-xxx-xxx-xxxx</a>
+            <a href="tel:+19022338587" className="btn-ghost-white"><Phone size={16} /> Call (902) 233-8587</a>
           </div>
         </div>
       </section>
@@ -309,17 +312,16 @@ export default function App() {
       <footer className="footer">
         <div className="container footer-simple">
           <div className="footer-brand">
-            <a href="#" className="logo footer-logo">
-              <div className="logo-mark"><Zap size={20} /></div>
-              <span className="logo-text">Infinity Auto Glass</span>
+            <a href="#" className="footer-logo">
+              <img src="/logo.png" alt="Infinity Auto Glass" className="logo-img" />
             </a>
             <p className="footer-desc">Infinity Auto Glass — Professional mobile auto glass services in Halifax, Dartmouth, and surrounding HRM areas.</p>
           </div>
           <div className="footer-contact-block">
             <h4>Contact Us</h4>
             <div className="footer-contact-items">
-              <div><Phone size={14} /> xxx-xxx-xxx-xxxx</div>
-              <div><Mail size={14} /> hello@krytons.com</div>
+              <div><Phone size={14} /> (902) 233-8587</div>
+              <div><Mail size={14} /> infinityautoglass1@gmail.com</div>
               <div><MapPin size={14} /> Mumbai, India</div>
             </div>
           </div>
@@ -347,7 +349,7 @@ export default function App() {
                 <p className="modal-eyebrow"><i className="fa-solid fa-car"></i> Free Auto Glass Quote</p>
                 <h3 className="modal-title">Get Your Free Quote</h3>
                 <p className="modal-sub">Fill in your details and we'll call you back within the hour with a price.</p>
-                <form onSubmit={async e => { e.preventDefault(); setModalLoading(true); const ok = await submitToMailer(form); setModalLoading(false); if(ok) setIsSubmitted(true); }}>
+                <form onSubmit={async e => { e.preventDefault(); setModalLoading(true); const ok = await submitToMailer(form); setModalLoading(false); if(ok) setIsSubmitted(true); else alert('Something went wrong. Please try again or call us directly.'); }}>
                   <div className="form-group">
                     <label className="form-label">Full Name *</label>
                     <input type="text" required className="form-input" placeholder="Your full name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
@@ -355,7 +357,7 @@ export default function App() {
                   <div className="form-row">
                     <div>
                       <label className="form-label">Phone *</label>
-                      <input type="tel" required className="form-input" placeholder="e.g. xxx-xxx-xxx-xxxx" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
+                      <input type="tel" required className="form-input" placeholder="e.g. (902) 233-8587" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
                     </div>
                     <div>
                       <label className="form-label">Email *</label>
